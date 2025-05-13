@@ -1,0 +1,212 @@
+.dashboardPage {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .youtubeFormContainer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  .youtubeFormContainer.show {
+    max-height: 100px; /* Đặt chiều cao tối đa khi hiển thị */
+  }
+
+  .youtubeForm {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .youtubeForm input {
+    flex: 1;
+    padding: 8px;
+    margin-top: 20px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 400px;
+  }
+
+  .youtubeForm button {
+    padding: 8px 16px;
+    background-color: #217bfe;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 96%;
+    height: 100%;
+  }
+
+  .videoscreen {
+    flex: 1; /* Chiếm 50% không gian */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2c2937;
+    color: white;
+    font-size: 24px;
+    height: 300px; /* Chiều cao cố định */
+    margin-right: 10px; /* Khoảng cách giữa VIDEO và TEXT */
+    border-radius: 10px;
+  }
+
+  .retrievalevent {
+    flex: 1; /* Chiếm 50% không gian */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #605e68;
+    color: white;
+    font-size: 24px;
+    height: 300px; /* Chiều cao cố định */
+    margin-left: 10px; /* Khoảng cách giữa VIDEO và TEXT */
+    border-radius: 10px;
+  }
+
+  .btnSum {
+    display: flex; /* Sử dụng flexbox để căn chỉnh nội dung */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    padding: 15px 25px;
+    background-color: #217bfe;
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    width: 120px;
+    gap: 2px; /* Khoảng cách giữa text và hình ảnh */
+
+    &:hover {
+      background-color: white;
+      color: #217bfe;
+    }
+  }
+
+  .btnSum img {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+  }
+
+  .uploadBtn {
+    padding: 15px 25px;
+    background-color: #217bfe;
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-top: 20px;
+
+    &:hover {
+      background-color: white;
+      color: #217bfe;
+    }
+  }
+
+  .texts {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    gap: 50px;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      opacity: 0.2;
+
+      img {
+        width: 64px;
+        height: 64px;
+      }
+
+      h1 {
+        font-size: 64px;
+        background: linear-gradient(to right, #217bfe, #e55571);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+    }
+
+    .options {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 50px;
+
+      .option {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-weight: 300;
+        font-size: 14px;
+        padding: 20px;
+        border: 1px solid #555;
+        border-radius: 20px;
+
+        img {
+          width: 40px;
+          height: 40px;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+
+  .formContainer {
+    margin-top: auto;
+    width: 50%;
+    background-color: #2c2937;
+    border-radius: 20px;
+    display: flex;
+
+    form {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 10px;
+
+      input {
+        flex: 1;
+        padding: 20px;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        color: #ececec;
+      }
+      button {
+        background-color: #605e68;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+
+        img {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+}
