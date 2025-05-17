@@ -7,6 +7,7 @@ const DashboardPage = () => {
   const [videoSrc, setVideoSrc] = useState(null);
   const [youtubeURL, setYoutubeURL] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [predictionResult, setPredictionResult] = useState("");
 
   const location = useLocation();
 
@@ -39,6 +40,50 @@ const DashboardPage = () => {
     const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
     if (videoId) {
       setVideoSrc(`https://www.youtube.com/embed/${videoId}`);
+    }
+  };
+
+  const handlePredict = async () => {
+    if (!videoSrc) {
+      alert("Please upload a video or provide a YouTube URL.");
+      return;
+    }
+
+    try {
+      let response;
+      if (videoSrc.includes("youtube.com")) {
+        // Gửi URL YouTube đến API
+        response = await fetch("http://localhost:5000/api/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ file_name: videoSrc }),
+        });
+      } else {
+        // Gửi tệp video đến API
+        const formData = new FormData();
+        const videoFile = document.getElementById("videoUpload").files[0];
+        if (!videoFile) {
+          alert("Please upload a video file.");
+          return;
+        }
+        formData.append("file", videoFile);
+
+        response = await fetch("http://localhost:5000/api/predict", {
+          method: "POST",
+          body: formData,
+        });
+      }
+
+      const data = await response.json();
+      if (!data.caption) {
+        throw new Error("No caption returned from API.");
+      }
+      setPredictionResult(data.caption); // Lưu kết quả dự đoán
+    } catch (error) {
+      console.error("Error predicting video:", error);
+      alert("An error occurred while predicting the video.");
     }
   };
 
@@ -109,10 +154,28 @@ const DashboardPage = () => {
             "VIDEO UPLOAD"
           )}
         </div>
-        <div className="retrievalevent">Sự kiện từ video của bạn<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12zm-5-6l-7 4V7z"/></svg></div>
+        <div className="retrievalevent">
+          {predictionResult ? (
+            <p>{predictionResult}</p>
+          ) : (
+            <>
+              Sự kiện từ video của bạn{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+              >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12zm-5-6l-7 4V7z" />
+              </svg>
+              <p>No prediction yet.</p>
+            </>
+          )}
+        </div>
       </div>
 
-      <button className="btnSum">
+      <button className="btnSum" onClick={handlePredict}>
         Run
         <img src="/send.png" alt="" />
       </button>
