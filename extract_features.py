@@ -8,24 +8,22 @@ from tensorflow.keras.models import Model
 import config
 
 
-def video_to_frames(video):
-    path = os.path.join(config.test_path, 'temporary_images')
-    if os.path.exists(path):
-        shutil.rmtree(path)
-    os.makedirs(path)
-    video_path = os.path.join(config.test_path, 'video', video)
+def video_to_frames(video_path):
+    temp_dir = os.path.join("static", "features", "temporary_images")
+    if os.path.exists(temp_dir):
+        shutil.rmtree(temp_dir)
+    os.makedirs(temp_dir, exist_ok=True)
     count = 0
     image_list = []
-    # Path to video file
     cap = cv2.VideoCapture(video_path)
     while cap.isOpened():
         ret, frame = cap.read()
-        if ret is False:
+        if not ret:
             break
-        cv2.imwrite(os.path.join(config.test_path, 'temporary_images', 'frame%d.jpg' % count), frame)
-        image_list.append(os.path.join(config.test_path, 'temporary_images', 'frame%d.jpg' % count))
+        img_path = os.path.join(temp_dir, f'frame{count}.jpg')
+        cv2.imwrite(img_path, frame)
+        image_list.append(img_path)
         count += 1
-
     cap.release()
     cv2.destroyAllWindows()
     return image_list
@@ -44,30 +42,50 @@ def load_image(path):
     return img
 
 
-def extract_features(video, model):
-    """
+# def extract_features(video, model):
+#     """
 
-    :param video: The video whose frames are to be extracted to convert into a numpy array
-    :param model: the pretrained vgg16 model
-    :return: numpy array of size 4096x80
-    """
-    video_id = video.split(".")[0]
-    print(video_id)
-    print(f'Processing video {video}')
+#     :param video: The video whose frames are to be extracted to convert into a numpy array
+#     :param model: the pretrained vgg16 model
+#     :return: numpy array of size 4096x80
+#     """
+#     video_id = video.split(".")[0]
+#     print(video_id)
+#     print(f'Processing video {video}')
 
-    image_list = video_to_frames(video)
-    samples = np.round(np.linspace(
-        0, len(image_list) - 1, 80))
-    image_list = [image_list[int(sample)] for sample in samples]
+#     image_list = video_to_frames(video)
+#     samples = np.round(np.linspace(
+#         0, len(image_list) - 1, 80))
+#     image_list = [image_list[int(sample)] for sample in samples]
+#     images = np.zeros((len(image_list), 224, 224, 3))
+#     for i in range(len(image_list)):
+#         img = load_image(image_list[i])
+#         images[i] = img
+#     images = np.array(images)
+#     fc_feats = model.predict(images, batch_size=128)
+#     img_feats = np.array(fc_feats)
+#     # cleanup
+#     shutil.rmtree(os.path.join(config.test_path, 'temporary_images'))
+#     return img_feats
+
+def extract_features(video_path, model):
+    print(f'Processing video {video_path}')
+    image_list = video_to_frames(video_path)
+    if len(image_list) == 0:
+        raise Exception(f"No frames extracted from video: {video_path}")
+    # Nếu số frame < 80, lặp lại frame cuối cùng cho đủ 80
+    if len(image_list) < 80:
+        image_list += [image_list[-1]] * (80 - len(image_list))
+    samples = np.round(np.linspace(0, len(image_list) - 1, 80)).astype(int)
+    image_list = [image_list[sample] for sample in samples]
     images = np.zeros((len(image_list), 224, 224, 3))
-    for i in range(len(image_list)):
-        img = load_image(image_list[i])
+    for i, img_path in enumerate(image_list):
+        img = load_image(img_path)
         images[i] = img
-    images = np.array(images)
     fc_feats = model.predict(images, batch_size=128)
     img_feats = np.array(fc_feats)
     # cleanup
-    shutil.rmtree(os.path.join(config.test_path, 'temporary_images'))
+    shutil.rmtree(os.path.dirname(image_list[0]))
     return img_feats
 
 

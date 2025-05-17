@@ -135,24 +135,28 @@ class VideoDescriptionRealTime(object):
         index_to_word = {value: key for key, value in self.tokenizer.word_index.items()}
         return index_to_word
 
-    def get_test_data(self):
-        # loads the features array
-        file_list = os.listdir(os.path.join(self.test_path, 'video'))
-        # with open(os.path.join(self.test_path, 'testing.txt')) as testing_file:
-            # lines = testing_file.readlines()
-        # file_name = lines[self.num].strip()
-        file_name = file_list[self.num]
-        path = os.path.join(self.test_path, 'feat', file_name + '.npy')
-        if os.path.exists(path):
-            f = np.load(path)
+    def get_test_data(self, file_name):
+        """
+        Nhận đường dẫn file video (file_name), trích xuất đặc trưng và trả về đặc trưng + tên file.
+        """
+    # Lấy tên file không có đuôi mở rộng
+        file_base = os.path.basename(file_name)
+        file_no_ext = os.path.splitext(file_base)[0]
+
+    # Đường dẫn tới file đặc trưng
+        feat_dir = 'static/features'
+        os.makedirs(feat_dir, exist_ok=True)
+        feat_path = os.path.join(feat_dir, file_no_ext + '.npy')
+
+        if os.path.exists(feat_path):
+            f = np.load(feat_path)
         else:
-            model = extract_features.model_cnn_load()
-            f = extract_features.extract_features(file_name, model)
-        if self.num < len(file_list):
-            self.num += 1
-        else:
-            self.num = 0
-        return f, file_name
+            model_cnn = extract_features.model_cnn_load()
+            # Truyền đúng đường dẫn file video vào extract_features
+            f = extract_features.extract_features(file_name, model_cnn)
+            # Nếu muốn, có thể lưu lại đặc trưng để dùng lần sau
+            np.save(feat_path, f)
+        return f, file_no_ext
 
     def test(self):
         X_test, filename = self.get_test_data()
@@ -169,64 +173,65 @@ class VideoDescriptionRealTime(object):
         self.max_probability = -1
         return sentence_predicted, filename
 
-    def main(self, filename, caption):
-        """
+    # def main(self, filename, caption):
+    #     """
 
-        :param filename: the video to load
-        :param caption: final caption
-        :return:
-        """
-        # 1. Initialize reading video object
-        cap1 = cv2.VideoCapture(os.path.join(self.test_path, 'video', filename))
-        cap2 = cv2.VideoCapture(os.path.join(self.test_path, 'video', filename))
-        caption = '[' + ' '.join(caption.split()[1:]) + ']'
-        # 2. Cycle through pictures
-        while cap1.isOpened():
-            ret, frame = cap2.read()
-            ret2, frame2 = cap1.read()
-            if ret:
-                imS = cv2.resize(frame, (480, 300))
-                cv2.putText(imS, caption, (100, 270), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0),
-                            2, cv2.LINE_4)
-                cv2.imshow("VIDEO CAPTIONING", imS)
-            if ret2:
-                imS = cv2.resize(frame, (480, 300))
-                cv2.imshow("ORIGINAL", imS)
-            else:
-                break
+    #     :param filename: the video to load
+    #     :param caption: final caption
+    #     :return:
+    #     """
+    #     # 1. Initialize reading video object
+    #     cap1 = cv2.VideoCapture(os.path.join(self.test_path, 'video', filename))
+    #     cap2 = cv2.VideoCapture(os.path.join(self.test_path, 'video', filename))
+    #     caption = '[' + ' '.join(caption.split()[1:]) + ']'
+    #     # 2. Cycle through pictures
+    #     while cap1.isOpened():
+    #         ret, frame = cap2.read()
+    #         ret2, frame2 = cap1.read()
+    #         if ret:
+    #             imS = cv2.resize(frame, (480, 300))
+    #             cv2.putText(imS, caption, (100, 270), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0),
+    #                         2, cv2.LINE_4)
+    #             cv2.imshow("VIDEO CAPTIONING", imS)
+    #         if ret2:
+    #             imS = cv2.resize(frame, (480, 300))
+    #             cv2.imshow("ORIGINAL", imS)
+    #         else:
+    #             break
 
-            # Quit playing
-            key = cv2.waitKey(25)
-            if key == 27:  # Button esc
-                break
+    #         # Quit playing
+    #         key = cv2.waitKey(25)
+    #         if key == 27:  # Button esc
+    #             break
 
-        # 3. Free resources
-        cap1.release()
-        cap2.release()
-        cv2.destroyAllWindows()
+    #     # 3. Free resources
+    #     cap1.release()
+    #     cap2.release()
+    #     cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
-    video_to_text = VideoDescriptionRealTime(config)
-    while True:
-        print('.........................\nGenerating Caption:\n')
-        start = time.time()
-        video_caption, file = video_to_text.test()
-        end = time.time()
-        sentence = ''
-        print(sentence)
-        for text in video_caption.split():
-            sentence = sentence + ' ' + text
-            print('\n.........................\n')
-            print(sentence)
-        print('\n.........................\n')
-        print('It took {:.2f} seconds to generate caption'.format(end-start))
-        video_to_text.main(file, sentence)
-        play_video = input('Should I play the video? ')
-        if play_video.lower() == 'y':
-            continue
-        elif play_video.lower() == 'n':
-            break
-        else:
-            print('Could not understand type (y) for yes and (n) for no')
-            continue
+    # video_to_text = VideoDescriptionRealTime(config)
+    # while True:
+    #     print('.........................\nGenerating Caption:\n')
+    #     start = time.time()
+    #     video_caption, file = video_to_text.test()
+    #     end = time.time()
+    #     sentence = ''
+    #     print(sentence)
+    #     for text in video_caption.split():
+    #         sentence = sentence + ' ' + text
+    #         print('\n.........................\n')
+    #         print(sentence)
+    #     print('\n.........................\n')
+    #     print('It took {:.2f} seconds to generate caption'.format(end-start))
+    #     video_to_text.main(file, sentence)
+    #     play_video = input('Should I play the video? ')
+    #     if play_video.lower() == 'y':
+    #         continue
+    #     elif play_video.lower() == 'n':
+    #         break
+    #     else:
+    #         print('Could not understand type (y) for yes and (n) for no')
+    #         continue
+    pass
