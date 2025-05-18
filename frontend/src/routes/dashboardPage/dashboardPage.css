@@ -1,3 +1,20 @@
+.spinner {
+  border: 6px solid #e0e0e0;
+  border-top: 6px solid #5c6cff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .dashboardPage {
   height: 100%;
   display: flex;
@@ -8,10 +25,14 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    height: 200px;
   }
 
   .youtubeFormContainer.show {
-    max-height: 100px; /* Đặt chiều cao tối đa khi hiển thị */
+    max-height: 120px; /* Đặt chiều cao tối đa khi hiển thị */
   }
 
   .youtubeForm {
@@ -22,29 +43,50 @@
 
   .youtubeForm input {
     flex: 1;
-    padding: 8px;
-    margin-top: 20px;
+    padding: 0 16px;
+    /* margin-top: 20px; */
     margin-right: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     width: 400px;
+    height: 55px;
+    font-size: 18px;
+    font-weight: 500;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
   }
 
   .youtubeForm button {
-    padding: 8px 16px;
-    background-color: #217bfe;
-    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #5c6cff;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    width: 280px;
+    height: 60px;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(92, 108, 255, 0.08);
+    transition: background 0.2s, color 0.2s;
+    outline: none;
+    margin-top: 20px;
+  }
+
+  .youtubeForm button:hover {
+    background-color: white;
+    color: #217bfe;
+    border: 2px solid #217bfe;
   }
 
   .content {
     display: flex;
-    justify-content: space-between;
+    gap: 30px;
+    justify-content: center;
     align-items: center;
-    width: 96%;
-    height: 100%;
   }
 
   .videoscreen {
@@ -60,30 +102,43 @@
     border-radius: 10px;
   }
 
+  .videoscreen,
   .retrievalevent {
-    flex: 1; /* Chiếm 50% không gian */
+    width: 800px; /* tăng chiều rộng */
+    height: 450px; /* tăng chiều cao */
+    background: #65626b;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #605e68;
-    color: white;
-    font-size: 24px;
-    height: 300px; /* Chiều cao cố định */
-    margin-left: 10px; /* Khoảng cách giữa VIDEO và TEXT */
-    border-radius: 10px;
+    font-size: 2rem;
+    color: #fff;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+    text-align: center;
   }
 
   .btnSum {
-    display: flex; /* Sử dụng flexbox để căn chỉnh nội dung */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: center; /* Căn giữa theo chiều ngang */
-    padding: 15px 25px;
-    background-color: #217bfe;
-    color: white;
-    border-radius: 20px;
-    font-size: 14px;
-    width: 120px;
-    gap: 2px; /* Khoảng cách giữa text và hình ảnh */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #5c6cff;
+    width: 280px;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-weight: 600;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    /*padding: 14px 32px;*/
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(92, 108, 255, 0.08);
+    transition: background 0.2s, color 0.2s;
+    outline: none;
+    margin-bottom: 18px;
 
     &:hover {
       background-color: white;
@@ -98,17 +153,46 @@
   }
 
   .uploadBtn {
-    padding: 15px 25px;
+    /* padding: 15px 25px;
     background-color: #217bfe;
     color: white;
     border-radius: 20px;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 20px;
+    width: 280px;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-weight: 600;
+    transition: bacground 0.2s, color 0.2s; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #5c6cff;
+    width: 280px;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-weight: 600;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    /*padding: 14px 32px;*/
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(92, 108, 255, 0.08);
+    transition: background 0.2s, color 0.2s;
+    outline: none;
+    margin-bottom: 18px;
+  }
 
-    &:hover {
-      background-color: white;
-      color: #217bfe;
-    }
+  .uploadBtn:hover {
+    background-color: white;
+    color: #217bfe;
+    border: 2px solid #217bfe;
   }
 
   .texts {

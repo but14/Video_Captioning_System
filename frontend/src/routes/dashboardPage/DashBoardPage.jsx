@@ -9,6 +9,8 @@ const DashboardPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [predictionResult, setPredictionResult] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   const location = useLocation();
 
   //Lay video tu query parameter
@@ -48,7 +50,7 @@ const DashboardPage = () => {
       alert("Please upload a video or provide a YouTube URL.");
       return;
     }
-
+    setLoading(true);
     try {
       let response;
       if (videoSrc.includes("youtube.com")) {
@@ -84,6 +86,8 @@ const DashboardPage = () => {
     } catch (error) {
       console.error("Error predicting video:", error);
       alert("An error occurred while predicting the video.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -108,6 +112,23 @@ const DashboardPage = () => {
         className="uploadBtn"
         onClick={() => document.getElementById("videoUpload").click()}
       >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="22"
+          fill="none"
+          viewBox="0 0 24 24"
+          style={{ marginRight: "8px" }}
+        >
+          <path
+            fill="currentColor"
+            d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16"
+            stroke="#fff"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         Upload from your computer
       </button>
       <input
@@ -119,6 +140,23 @@ const DashboardPage = () => {
       />
 
       <button onClick={() => setShowForm(!showForm)} className="uploadBtn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="22"
+          fill="none"
+          viewBox="0 0 24 24"
+          style={{ marginRight: "8px" }}
+        >
+          <path
+            fill="currentColor"
+            d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16"
+            stroke="#fff"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         Upload from URL
       </button>
       <div className={`youtubeFormContainer ${showForm ? "show" : ""}`}>
@@ -155,7 +193,9 @@ const DashboardPage = () => {
           )}
         </div>
         <div className="retrievalevent">
-          {predictionResult ? (
+          {loading ? (
+            <div className="spinner"></div>
+          ) : predictionResult ? (
             <p>{predictionResult}</p>
           ) : (
             <>
@@ -169,7 +209,6 @@ const DashboardPage = () => {
                 <path d="M0 0h24v24H0V0z" fill="none" />
                 <path d="M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12zm-5-6l-7 4V7z" />
               </svg>
-              <p>No prediction yet.</p>
             </>
           )}
         </div>
