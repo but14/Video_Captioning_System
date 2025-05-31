@@ -189,7 +189,7 @@ const DashboardPage = () => {
               <video src={videoSrc} controls width="100%" height="100%" />
             )
           ) : (
-            "VIDEO UPLOAD"
+            "IMAGE OR VIDEO UPLOAD"
           )}
         </div>
         <div className="retrievalevent">
@@ -199,8 +199,8 @@ const DashboardPage = () => {
             <p>{predictionResult}</p>
           ) : (
             <>
-              Sự kiện từ video của bạn{" "}
-              <svg
+              EVENT FROM YOUR IMAGE, VIDEO{" "}
+              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="24"
                 viewBox="0 0 24 24"
@@ -208,15 +208,15 @@ const DashboardPage = () => {
               >
                 <path d="M0 0h24v24H0V0z" fill="none" />
                 <path d="M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12zm-5-6l-7 4V7z" />
-              </svg>
+              </svg> */}
             </>
           )}
         </div>
       </div>
 
       <button className="btnSum" onClick={handlePredict}>
-        Run
-        <img src="/send.png" alt="" />
+        Predict
+        {/* <img src="/send.png" alt="" /> */}
       </button>
     </div>
   );
