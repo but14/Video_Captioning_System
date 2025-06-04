@@ -11,4 +11,11 @@ max_probability = -1
 save_model_path = 'model_final'
 validation_split = 0.15
 max_length = 10
-search_type = 'greedy'
+# top_p, greedy
+search_type = 'greedy' 
+model_path = 'models/caption_model.h5'
+tokenizer_path = "models/tokenizer.p"
+max_caption_length = 34
+cnn_output_dim = 2048
+search_type_image = 'greedy'  # hoặc 'beam'
+
