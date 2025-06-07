@@ -15,10 +15,6 @@ import config
 
 
 class VideoDescriptionTrain(object):
-    """
-    Initialize the parameters for the model
-    """
-
     def __init__(self, config):
         self.train_path = config.train_path
         self.test_path = config.test_path
@@ -33,7 +29,6 @@ class VideoDescriptionTrain(object):
         self.time_steps_encoder = config.time_steps_encoder
         self.time_steps_decoder = None
         self.x_data = {}
-
         # processed data
         self.tokenizer = None
 
