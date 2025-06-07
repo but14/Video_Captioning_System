@@ -1,128 +1,10 @@
-#### CNN VGG16 Feature Extraction Script
-# import shutil
-# import tqdm
-# import numpy as np
-# import cv2
-# import os
-# from tensorflow.keras.applications.vgg16 import VGG16
-# from tensorflow.keras.models import Model
-# import config
-
-
-# def video_to_frames(video_path):
-#     temp_dir = os.path.join("static", "features", "temporary_images")
-#     if os.path.exists(temp_dir):
-#         shutil.rmtree(temp_dir)
-#     os.makedirs(temp_dir, exist_ok=True)
-#     count = 0
-#     image_list = []
-#     cap = cv2.VideoCapture(video_path)
-#     while cap.isOpened():
-#         ret, frame = cap.read()
-#         if not ret:
-#             break
-#         img_path = os.path.join(temp_dir, f'frame{count}.jpg')
-#         cv2.imwrite(img_path, frame)
-#         image_list.append(img_path)
-#         count += 1
-#     cap.release()
-#     cv2.destroyAllWindows()
-#     return image_list
-
-
-# def model_cnn_load():
-#     model = VGG16(weights="imagenet", include_top=True, input_shape=(224, 224, 3))
-#     out = model.layers[-2].output
-#     model_final = Model(inputs=model.input, outputs=out)
-#     return model_final
-
-
-# def load_image(path):
-#     img = cv2.imread(path)
-#     img = cv2.resize(img, (224, 224))
-#     return img
-
-
-# # def extract_features(video, model):
-# #     """
-
-# #     :param video: The video whose frames are to be extracted to convert into a numpy array
-# #     :param model: the pretrained vgg16 model
-# #     :return: numpy array of size 4096x80
-# #     """
-# #     video_id = video.split(".")[0]
-# #     print(video_id)
-# #     print(f'Processing video {video}')
-
-# #     image_list = video_to_frames(video)
-# #     samples = np.round(np.linspace(
-# #         0, len(image_list) - 1, 80))
-# #     image_list = [image_list[int(sample)] for sample in samples]
-# #     images = np.zeros((len(image_list), 224, 224, 3))
-# #     for i in range(len(image_list)):
-# #         img = load_image(image_list[i])
-# #         images[i] = img
-# #     images = np.array(images)
-# #     fc_feats = model.predict(images, batch_size=128)
-# #     img_feats = np.array(fc_feats)
-# #     # cleanup
-# #     shutil.rmtree(os.path.join(config.test_path, 'temporary_images'))
-# #     return img_feats
-
-# def extract_features(video_path, model):
-#     print(f'Processing video {video_path}')
-#     image_list = video_to_frames(video_path)
-#     if len(image_list) == 0:
-#         raise Exception(f"No frames extracted from video: {video_path}")
-#     # Nếu số frame < 80, lặp lại frame cuối cùng cho đủ 80
-#     if len(image_list) < 80:
-#         image_list += [image_list[-1]] * (80 - len(image_list))
-#     samples = np.round(np.linspace(0, len(image_list) - 1, 80)).astype(int)
-#     image_list = [image_list[sample] for sample in samples]
-#     images = np.zeros((len(image_list), 224, 224, 3))
-#     for i, img_path in enumerate(image_list):
-#         img = load_image(img_path)
-#         images[i] = img
-#     fc_feats = model.predict(images, batch_size=128)
-#     img_feats = np.array(fc_feats)
-#     # cleanup
-#     shutil.rmtree(os.path.dirname(image_list[0]))
-#     return img_feats
-
-
-# def extract_feats_pretrained_cnn():
-#     """
-#     saves the numpy features from all the videos
-#     """
-#     model = model_cnn_load()
-#     print('Model loaded')
-
-#     if not os.path.isdir(os.path.join(config.test_path, 'feat')):
-#         os.mkdir(os.path.join(config.test_path, 'feat'))
-
-#     video_list = os.listdir(os.path.join(config.test_path, 'video'))
-    
-#     #ًWhen running the script on Colab an item called '.ipynb_checkpoints' 
-#     #is added to the beginning of the list causing errors later on, so the next line removes it.
-#     video_list.remove('.ipynb_checkpoints')
-    
-#     for video in video_list:
-
-#         outfile = os.path.join(config.test_path, 'feat', video + '.npy')
-#         img_feats = extract_features(video, model)
-#         np.save(outfile, img_feats)
-
-
-# if __name__ == "__main__":
-#     extract_feats_pretrained_cnn()
-
-#### CNN ResNet50 Feature Extraction Script
-
+### CNN VGG16 Feature Extraction Script
 import shutil
+import tqdm
 import numpy as np
 import cv2
 import os
-from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
+from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.models import Model
 import config
 
@@ -149,24 +31,50 @@ def video_to_frames(video_path):
 
 
 def model_cnn_load():
-    model = ResNet50(weights="imagenet", include_top=False, pooling='avg', input_shape=(224, 224, 3))
-    # Output shape: (2048,)
-    return model
+    model = VGG16(weights="imagenet", include_top=True, input_shape=(224, 224, 3))
+    out = model.layers[-2].output
+    model_final = Model(inputs=model.input, outputs=out)
+    return model_final
 
 
 def load_image(path):
     img = cv2.imread(path)
     img = cv2.resize(img, (224, 224))
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = preprocess_input(img)  # rất quan trọng khi dùng ResNet
     return img
 
+
+# def extract_features(video, model):
+#     """
+
+#     :param video: The video whose frames are to be extracted to convert into a numpy array
+#     :param model: the pretrained vgg16 model
+#     :return: numpy array of size 4096x80
+#     """
+#     video_id = video.split(".")[0]
+#     print(video_id)
+#     print(f'Processing video {video}')
+
+#     image_list = video_to_frames(video)
+#     samples = np.round(np.linspace(
+#         0, len(image_list) - 1, 80))
+#     image_list = [image_list[int(sample)] for sample in samples]
+#     images = np.zeros((len(image_list), 224, 224, 3))
+#     for i in range(len(image_list)):
+#         img = load_image(image_list[i])
+#         images[i] = img
+#     images = np.array(images)
+#     fc_feats = model.predict(images, batch_size=128)
+#     img_feats = np.array(fc_feats)
+#     # cleanup
+#     shutil.rmtree(os.path.join(config.test_path, 'temporary_images'))
+#     return img_feats
 
 def extract_features(video_path, model):
     print(f'Processing video {video_path}')
     image_list = video_to_frames(video_path)
     if len(image_list) == 0:
         raise Exception(f"No frames extracted from video: {video_path}")
+    # Nếu số frame < 80, lặp lại frame cuối cùng cho đủ 80
     if len(image_list) < 80:
         image_list += [image_list[-1]] * (80 - len(image_list))
     samples = np.round(np.linspace(0, len(image_list) - 1, 80)).astype(int)
@@ -177,30 +85,122 @@ def extract_features(video_path, model):
         images[i] = img
     fc_feats = model.predict(images, batch_size=128)
     img_feats = np.array(fc_feats)
+    # cleanup
     shutil.rmtree(os.path.dirname(image_list[0]))
     return img_feats
 
 
 def extract_feats_pretrained_cnn():
     """
-    Saves the numpy features from all the videos using ResNet50.
+    saves the numpy features from all the videos
     """
     model = model_cnn_load()
-    print('ResNet50 model loaded')
+    print('Model loaded')
 
-    feat_path = os.path.join(config.test_path, 'feat')
-    if not os.path.isdir(feat_path):
-        os.mkdir(feat_path)
+    if not os.path.isdir(os.path.join(config.test_path, 'feat')):
+        os.mkdir(os.path.join(config.test_path, 'feat'))
 
-    video_dir = os.path.join(config.test_path, 'video')
-    video_list = [v for v in os.listdir(video_dir) if v.endswith((".mp4", ".avi", ".mov"))]
-
+    video_list = os.listdir(os.path.join(config.test_path, 'video'))
+    
+    #ًWhen running the script on Colab an item called '.ipynb_checkpoints' 
+    #is added to the beginning of the list causing errors later on, so the next line removes it.
+    video_list.remove('.ipynb_checkpoints')
+    
     for video in video_list:
-        video_path = os.path.join(video_dir, video)
-        outfile = os.path.join(feat_path, video + '.npy')
-        img_feats = extract_features(video_path, model)
+
+        outfile = os.path.join(config.test_path, 'feat', video + '.npy')
+        img_feats = extract_features(video, model)
         np.save(outfile, img_feats)
 
 
 if __name__ == "__main__":
     extract_feats_pretrained_cnn()
+
+#### CNN ResNet50 Feature Extraction Script
+
+# import shutil
+# import numpy as np
+# import cv2
+# import os
+# from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
+# from tensorflow.keras.models import Model
+# import config
+
+
+# def video_to_frames(video_path):
+#     temp_dir = os.path.join("static", "features", "temporary_images")
+#     if os.path.exists(temp_dir):
+#         shutil.rmtree(temp_dir)
+#     os.makedirs(temp_dir, exist_ok=True)
+#     count = 0
+#     image_list = []
+#     cap = cv2.VideoCapture(video_path)
+#     while cap.isOpened():
+#         ret, frame = cap.read()
+#         if not ret:
+#             break
+#         img_path = os.path.join(temp_dir, f'frame{count}.jpg')
+#         cv2.imwrite(img_path, frame)
+#         image_list.append(img_path)
+#         count += 1
+#     cap.release()
+#     cv2.destroyAllWindows()
+#     return image_list
+
+
+# def model_cnn_load():
+#     model = ResNet50(weights="imagenet", include_top=False, pooling='avg', input_shape=(224, 224, 3))
+#     # Output shape: (2048,)
+#     return model
+
+
+# def load_image(path):
+#     img = cv2.imread(path)
+#     img = cv2.resize(img, (224, 224))
+#     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+#     img = preprocess_input(img)  # rất quan trọng khi dùng ResNet
+#     return img
+
+
+# def extract_features(video_path, model):
+#     print(f'Processing video {video_path}')
+#     image_list = video_to_frames(video_path)
+#     if len(image_list) == 0:
+#         raise Exception(f"No frames extracted from video: {video_path}")
+#     if len(image_list) < 80:
+#         image_list += [image_list[-1]] * (80 - len(image_list))
+#     samples = np.round(np.linspace(0, len(image_list) - 1, 80)).astype(int)
+#     image_list = [image_list[sample] for sample in samples]
+#     images = np.zeros((len(image_list), 224, 224, 3))
+#     for i, img_path in enumerate(image_list):
+#         img = load_image(img_path)
+#         images[i] = img
+#     fc_feats = model.predict(images, batch_size=128)
+#     img_feats = np.array(fc_feats)
+#     shutil.rmtree(os.path.dirname(image_list[0]))
+#     return img_feats
+
+
+# def extract_feats_pretrained_cnn():
+#     """
+#     Saves the numpy features from all the videos using ResNet50.
+#     """
+#     model = model_cnn_load()
+#     print('ResNet50 model loaded')
+
+#     feat_path = os.path.join(config.test_path, 'feat')
+#     if not os.path.isdir(feat_path):
+#         os.mkdir(feat_path)
+
+#     video_dir = os.path.join(config.test_path, 'video')
+#     video_list = [v for v in os.listdir(video_dir) if v.endswith((".mp4", ".avi", ".mov"))]
+
+#     for video in video_list:
+#         video_path = os.path.join(video_dir, video)
+#         outfile = os.path.join(feat_path, video + '.npy')
+#         img_feats = extract_features(video_path, model)
+#         np.save(outfile, img_feats)
+
+
+# if __name__ == "__main__":
+#     extract_feats_pretrained_cnn()
