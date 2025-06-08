@@ -37,13 +37,13 @@ const DashboardPage = () => {
     }
   };
 
-  const handleYoutubeSubmit = (e) => {
-    e.preventDefault();
-    const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
-    if (videoId) {
-      setVideoSrc(`https://www.youtube.com/embed/${videoId}`);
-    }
-  };
+  // const handleYoutubeSubmit = (e) => {
+  //   e.preventDefault();
+  //   const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
+  //   if (videoId) {
+  //     setVideoSrc(`https://www.youtube.com/embed/${videoId}`);
+  //   }
+  // };
 
   const handlePredict = async () => {
     if (!videoSrc) {
@@ -109,8 +109,8 @@ const DashboardPage = () => {
         </form>
       </div>  */}
       <button
-        className="uploadBtn"
-        onClick={() => document.getElementById("videoUpload").click()}
+        className="uploadBtn" style={{ marginTop: "30px", marginBottom: "10px" }}
+        onClick={() => document.getElementById("videoUpload").click()} 
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ const DashboardPage = () => {
         onChange={handleUpload}
       />
 
-      <button onClick={() => setShowForm(!showForm)} className="uploadBtn">
+      {/* <button onClick={() => setShowForm(!showForm)} className="uploadBtn">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="22"
@@ -158,8 +158,8 @@ const DashboardPage = () => {
           />
         </svg>
         Upload from URL
-      </button>
-      <div className={`youtubeFormContainer ${showForm ? "show" : ""}`}>
+      </button> */}
+      {/* <div className={`youtubeFormContainer ${showForm ? "show" : ""}`}>
         <form onSubmit={handleYoutubeSubmit} className="youtubeForm">
           <input
             type="text"
@@ -171,7 +171,7 @@ const DashboardPage = () => {
             Submit
           </button>
         </form>
-      </div>
+      </div> */}
       <div className="content">
         <div className="videoscreen">
           {videoSrc ? (
@@ -189,7 +189,7 @@ const DashboardPage = () => {
               <video src={videoSrc} controls width="100%" height="100%" />
             )
           ) : (
-            "IMAGE OR VIDEO UPLOAD"
+            "VIDEO UPLOAD"
           )}
         </div>
         <div className="retrievalevent">
@@ -199,7 +199,7 @@ const DashboardPage = () => {
             <p>{predictionResult}</p>
           ) : (
             <>
-              EVENT FROM YOUR IMAGE, VIDEO{" "}
+              EVENT FROM YOUR VIDEO{" "}
               {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="24"

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: video-caption-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./static:/app/static
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: video-caption-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: always

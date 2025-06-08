@@ -1,0 +1,12 @@
+__pycache__/
+*.ipynb
+*.png
+*.jpg
+*.jpeg
+*.avi
+*.mp4
+data/
+images/
+static/uploads/
+static/converted/
+frontend/
