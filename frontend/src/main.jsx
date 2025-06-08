@@ -10,7 +10,7 @@ import {
 import Homepage from "./routes/homePage/Homepage.jsx";
 import SignInPage from "./routes/signInPage/SignInPage.jsx";
 import RootLayout from "./layouts/rootLayout/RootLayout.jsx";
-import SignUpPage from "./routes/signUpPage/SignUppage.jsx";
+import SignUpPage from "./routes/signUpPage/SignUpPage.jsx";
 import DashboardLayout from "./layouts/dashboardLayout/DashboardLayout.jsx";
 
 import ChatPage from "./routes/chatPage/ChatPage.jsx";
