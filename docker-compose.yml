@@ -8,8 +8,8 @@ services:
     container_name: video-caption-backend
     ports:
       - "5000:5000"
-    volumes:
-      - ./static:/app/static
+    # volumes:
+    #   - ./static:/app/static
     restart: always
 
   frontend:
