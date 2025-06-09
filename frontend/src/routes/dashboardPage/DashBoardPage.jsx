@@ -5,13 +5,14 @@ import { useLocation } from "react-router-dom";
 
 const DashboardPage = () => {
   const [videoSrc, setVideoSrc] = useState(null);
-  const [youtubeURL, setYoutubeURL] = useState("");
-  const [showForm, setShowForm] = useState(false);
+  
   const [predictionResult, setPredictionResult] = useState("");
 
   const [loading, setLoading] = useState(false);
 
   const location = useLocation();
+
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   //Lay video tu query parameter
   useEffect(() => {
@@ -55,7 +56,7 @@ const DashboardPage = () => {
       let response;
       if (videoSrc.includes("youtube.com")) {
         // Gửi URL YouTube đến API
-        response = await fetch("http://localhost:5000/api/predict", {
+        response = await fetch(`${apiUrl}/predict`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -72,7 +73,7 @@ const DashboardPage = () => {
         }
         formData.append("file", videoFile);
 
-        response = await fetch("http://localhost:5000/api/predict", {
+        response = await fetch(`${apiUrl}/predict`, {
           method: "POST",
           body: formData,
         });
