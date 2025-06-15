@@ -30,6 +30,52 @@ class VideoDescriptionRealTime(object):
         self.search_type = config.search_type
         self.num = 0
 
+    def top_p_sampling(self, input_seq, p=0.9, temperature=1.0, max_len=15):
+        inv_map = self.index_to_word()
+        states_value = self.inf_encoder_model.predict(input_seq)
+    
+        target_seq = np.zeros((1, 1, self.num_decoder_tokens))
+        target_seq[0, 0, self.tokenizer.word_index['bos']] = 1
+
+        final_sentence = ''
+    
+        for _ in range(max_len):
+            output_tokens, h, c = self.inf_decoder_model.predict([target_seq] + states_value)
+            output_tokens = output_tokens.reshape(-1)
+
+        # Apply temperature
+            if temperature != 1.0:
+                output_tokens = np.log(output_tokens + 1e-9) / temperature
+                output_tokens = np.exp(output_tokens)
+                output_tokens /= np.sum(output_tokens)
+
+                # Sort probabilities
+                sorted_indices = np.argsort(output_tokens)[::-1]
+                sorted_probs = output_tokens[sorted_indices]
+                cumulative_probs = np.cumsum(sorted_probs)
+
+                # Nucleus filtering
+                cutoff = np.where(cumulative_probs > p)[0][0]
+                filtered_indices = sorted_indices[:cutoff + 1]
+                filtered_probs = sorted_probs[:cutoff + 1]
+                filtered_probs = filtered_probs / np.sum(filtered_probs)
+
+                # Sample from filtered
+                sampled_token_index = np.random.choice(filtered_indices, p=filtered_probs)
+                sampled_word = inv_map.get(sampled_token_index, '')
+
+            if sampled_word in ['eos', None]:
+                break
+
+            final_sentence += sampled_word + ' '
+
+            # Prepare next input
+            target_seq = np.zeros((1, 1, self.num_decoder_tokens))
+            target_seq[0, 0, sampled_token_index] = 1.
+            states_value = [h, c]
+        
+        return final_sentence
+
     def greedy_search(self, loaded_array):
         """
 
